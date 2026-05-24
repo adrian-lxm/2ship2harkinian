@@ -154,8 +154,14 @@ jobs:
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
         cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_REMOTE_CONTROL=1
         cmake --build build-cmake --config Release -j$(nproc)
+        
+        # Download ARM64 linuxdeploy
+        mkdir -p build-cmake/linuxdeploy
+        wget -O build-cmake/linuxdeploy/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage
+        chmod +x build-cmake/linuxdeploy/linuxdeploy
+        
         (cd build-cmake && cpack -G External)
-
+        
         mv README.md readme.txt
         mv build-cmake/*.appimage 2ship.appimage
       env:
